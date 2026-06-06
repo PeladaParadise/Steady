@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Steady — The ADHD Parenting Coach for Right Now</title>
+  <meta name="description" content="Two taps. One script. Under 10 seconds. Get the exact words for hard parenting moments." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Steady — The ADHD Parenting Coach for Right Now" />
+  <meta property="og:description" content="Two taps. One script. Under 10 seconds." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1B4D3E;
+      --card: #2D5A3D;
+      --fg: #FAF6EF;
+      --primary: #5DCAA5;
+      --muted: rgba(93,202,165,0.6);
+      --radius: 12px;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      width: 100%;
+      max-width: 500px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 32px;
+      padding: 48px 0;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 500;
+      text-align: center;
+      letter-spacing: -0.02em;
+    }
+
+    .situation-label {
+      color: var(--primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn {
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid rgba(93,202,165,0.15);
+      border-radius: var(--radius);
+      padding: 16px;
+      font-family: var(--font);
+      font-size: 1rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-align: left;
+      min-height: 72px;
+      display: flex;
+      align-items: flex-start;
+      line-height: 1.4;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn:hover, .btn:active {
+      background: var(--primary);
+      color: var(--bg);
+      border-color: var(--primary);
+    }
+
+    .btn-full {
+      grid-column: span 2;
+      min-height: 64px;
+      background: transparent;
+      color: var(--primary);
+      border-color: rgba(93,202,165,0.3);
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .btn-full:hover, .btn-full:active {
+      background: rgba(93,202,165,0.1);
+      color: var(--primary);
+    }
+
+    .intensity-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn-intensity {
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid rgba(93,202,165,0.15);
+      border-radius: var(--radius);
+      padding: 0 24px;
+      height: 80px;
+      font-family: var(--font);
+      font-size: 1.125rem;
+      font-weight: 400;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-intensity:hover, .btn-intensity:active {
+      background: var(--primary);
+      color: var(--bg);
+    }
+
+    .btn-back {
+      background: transparent;
+      color: var(--muted);
+      border: none;
+      font-family: var(--font);
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 16px;
+      width: 100%;
+      text-align: center;
+      height: 56px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-back:hover { color: var(--fg); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: var(--bg);
+      border: none;
+      border-radius: var(--radius);
+      padding: 0 24px;
+      height: 56px;
+      font-family: var(--font);
+      font-size: 1.125rem;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.15s;
+    }
+
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .script-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .script-section h3 {
+      font-size: 0.625rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .script-section p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--fg);
+    }
+
+    .script-section.say-this p {
+      font-size: 1.125rem;
+      font-weight: 500;
+      background: rgba(93,202,165,0.1);
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 2px solid var(--primary);
+    }
+
+    .script-section.avoid p {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .divider {
+      width: 32px;
+      height: 1px;
+      background: rgba(93,202,165,0.2);
+    }
+
+    .step { margin-bottom: 6px; }
+
+    footer {
+      padding: 24px 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.75rem;
+      color: rgba(93,202,165,0.4);
+      letter-spacing: 0.1em;
+    }
+
+    /* Custom screen */
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid rgba(93,202,165,0.2);
+      border-radius: var(--radius);
+      padding: 20px;
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+    }
+
+    textarea::placeholder {
+      color: rgba(250,246,239,0.3);
+    }
+
+    .error-box {
+      background: rgba(180,50,50,0.2);
+      color: #ffaaaa;
+      border: 1px solid rgba(180,50,50,0.4);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.875rem;
+    }
+
+    .loading-text {
+      text-align: center;
+      color: var(--primary);
+      font-size: 1rem;
+      padding: 16px;
+    }
+
+    /* Animations */
+    .fade-in {
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Email capture */
+    .email-section {
+      background: rgba(93,202,165,0.08);
+      border: 1px solid rgba(93,202,165,0.2);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .email-section p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .email-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .email-input {
+      flex: 1;
+      background: var(--card);
+      color: var(--fg);
+      border: 1px solid rgba(93,202,165,0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: var(--font);
+      font-size: 0.875rem;
+      outline: none;
+    }
+
+    .email-input:focus { border-color: var(--primary); }
+
+    .btn-email {
+      background: var(--primary);
+      color: var(--bg);
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: var(--font);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .email-thanks {
+      color: var(--primary);
+      font-size: 0.875rem;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+  <footer>
+    <p>Steady — The Steady Home Method</p>
+  </footer>
+
+  <script>
+    // ── CONFIG ──────────────────────────────────────────────────────────────
+    // Replace this with your Render backend URL after deploying the backend
+    const BACKEND_URL = 'https://steady-api.onrender.com';
+
+    // ── SCRIPTS DATA ────────────────────────────────────────────────────────
+    const SCRIPTS = {
+      "Meltdown in progress": {
+        "Building up": {
+          regulateYourself: "Drop your shoulders. Slow your exhale. Lower your voice now.",
+          whatToDo: "1. Reduce all demands to zero.\n2. Move closer but do not block him.\n3. Offer a body reset — wall push or cold water on wrists.",
+          sayThis: "'I can see something feels really hard right now. I am right here.'",
+          avoidSaying: "'Calm down' — his brain cannot follow that instruction yet."
+        },
+        "Full explosion now": {
+          regulateYourself: "Say nothing for 10 seconds. Breathe out slowly. You are the steadiest person in this room.",
+          whatToDo: "1. Keep the environment safe.\n2. Sit nearby, not directly in front.\n3. No eye contact, no instructions, no reasoning.",
+          sayThis: "'I am right here. You do not have to talk. Take all the time you need.'",
+          avoidSaying: "'Look at me' or 'Stop that' — both increase threat response right now."
+        },
+        "It is over": {
+          regulateYourself: "Check your own breathing before you approach him.",
+          whatToDo: "1. Wait 20 minutes after the meltdown ends.\n2. Go to him with no agenda.\n3. Keep it brief and warm.",
+          sayThis: "'Hey. That was a big one. I love you no matter what. Do you want a hug or more space?'",
+          avoidSaying: "'We need to talk about what happened' — too soon, will re-escalate."
+        }
+      },
+      "Homework refusal": {
+        "Building up": {
+          regulateYourself: "One slow breath. Lower your voice before you say anything.",
+          whatToDo: "1. Stop pushing toward homework — his tank is empty.\n2. Offer 20 minutes of decompression, no screens.\n3. Sit beside him, not across from him, when ready.",
+          sayThis: "'We are not starting yet. Twenty minutes to decompress first. Then we pick the easiest thing on the list.'",
+          avoidSaying: "'You have had all afternoon' — neurologically inaccurate and escalates."
+        },
+        "Full explosion now": {
+          regulateYourself: "Drop the homework agenda entirely right now. His brain is offline.",
+          whatToDo: "1. Homework is done for now — safety first.\n2. Reduce all stimulation.\n3. Follow the meltdown protocol.",
+          sayThis: "'We are done with homework for now. Let your body reset first.'",
+          avoidSaying: "'You have to finish this' — unreachable right now."
+        },
+        "It is over": {
+          regulateYourself: "Breathe. Reconnect before you return to the work.",
+          whatToDo: "1. Reconnect warmly first — no mention of homework yet.\n2. Wait 10 minutes.\n3. Return with the easiest task only.",
+          sayThis: "'Okay. That was hard. When you are ready, just one question. That is all.'",
+          avoidSaying: "'Now can we please just do the homework' — too much pressure too soon."
+        }
+      },
+      "Screen time shutoff": {
+        "Building up": {
+          regulateYourself: "Give the warning before you need compliance — not at the moment of shutoff.",
+          whatToDo: "1. Five minute warning now.\n2. Two minute warning next.\n3. Have the next activity ready before you ask him to stop.",
+          sayThis: "'Five more minutes, then you save your game yourself. After screens we are doing something you like.'",
+          avoidSaying: "'Turn it off now' — a hard stop triggers immediate threat response."
+        },
+        "Full explosion now": {
+          regulateYourself: "Lower your voice. Do not escalate the threat.",
+          whatToDo: "1. Step back physically.\n2. Reduce demands to zero.\n3. Follow meltdown protocol.",
+          sayThis: "'I can see switching off was really hard. I am right here.'",
+          avoidSaying: "'Fine, no screens for a week' — disproportionate threats destroy trust."
+        },
+        "It is over": {
+          regulateYourself: "Reconnect before you address the screens issue.",
+          whatToDo: "1. Brief warm reconnection.\n2. Later, calmly set up the transition warning system for next time.",
+          sayThis: "'That was a hard switch. Next time I will give you more warning. Deal?'",
+          avoidSaying: "Nothing about consequences right now — problem solve when calm."
+        }
+      },
+      "Morning chaos": {
+        "Building up": {
+          regulateYourself: "Cut the number of words you are using by half. Right now.",
+          whatToDo: "1. Reduce decisions to zero — clothes out, bag packed, breakfast ready.\n2. Point to the visual checklist instead of giving instructions.\n3. One step at a time.",
+          sayThis: "'Good morning. First thing is breakfast. Everything else after.'",
+          avoidSaying: "'Every single morning it is the same thing' — shame adds cortisol."
+        },
+        "Full explosion now": {
+          regulateYourself: "The bus can wait. His nervous system cannot. Breathe.",
+          whatToDo: "1. Stop all rushing energy immediately.\n2. Sit down yourself — your body signals to his that the emergency is over.\n3. One small step only.",
+          sayThis: "'We are going to be okay. Just this one thing right now. That is all.'",
+          avoidSaying: "'You are going to miss the bus' — future threat makes regulation impossible."
+        },
+        "It is over": {
+          regulateYourself: "You got through it. Reset your own nervous system on the drive.",
+          whatToDo: "1. Brief warm send-off — no recap of what went wrong.\n2. Tonight, prep everything for tomorrow to reduce morning decisions.",
+          sayThis: "'Have a good day. I love you.'",
+          avoidSaying: "Anything about the morning. Clean slate."
+        }
+      },
+      "Bedtime resistance": {
+        "Building up": {
+          regulateYourself: "Dim your own energy. Your nervous system is contagious.",
+          whatToDo: "1. Screens off now — 60 minutes before target sleep time.\n2. Lower lights in the whole house.\n3. Same sequence as every night.",
+          sayThis: "'Lights are going low in the whole house now. Wind-down time. You do not have to sleep yet — just rest your body.'",
+          avoidSaying: "'You should be asleep by now' — pressure to sleep makes sleep neurologically harder."
+        },
+        "Full explosion now": {
+          regulateYourself: "This is medication rebound or delayed melatonin — not defiance. Lower your expectations for tonight.",
+          whatToDo: "1. Follow meltdown protocol.\n2. No sleep pressure.\n3. Quiet presence only.",
+          sayThis: "'Your brain is not ready yet. That is okay. I will sit with you for five minutes.'",
+          avoidSaying: "'Why are you like this at bedtime every night' — shame at bedtime ruins sleep further."
+        },
+        "It is over": {
+          regulateYourself: "Breathe. You got there.",
+          whatToDo: "1. Brief reconnection.\n2. Tomorrow set up morning light exposure within 10 minutes of waking — it sets the sleep clock for tomorrow night.",
+          sayThis: "'I love you. Sleep well.'",
+          avoidSaying: "Anything. Less is more at this point."
+        }
+      },
+      "After-school explosion": {
+        "Building up": {
+          regulateYourself: "Say nothing for the first 10 minutes. Silence is regulation.",
+          whatToDo: "1. Snack ready at the door — no questions, no instructions.\n2. No demands for 15 minutes.\n3. Let him decompress in his way.",
+          sayThis: "'Glad you are home. Snack is ready.'",
+          avoidSaying: "'How was school?' — demands verbal processing when his system is empty."
+        },
+        "Full explosion now": {
+          regulateYourself: "He held it together all day. This is restraint collapse — trust, not defiance.",
+          whatToDo: "1. Create a landing zone — quiet, snack available, no audience.\n2. Reduce all stimulation.\n3. Follow meltdown protocol.",
+          sayThis: "'I can see your body is overwhelmed. I am right here.'",
+          avoidSaying: "'Why are you in such a bad mood?' — adds shame to depletion."
+        },
+        "It is over": {
+          regulateYourself: "Reconnect before anything else.",
+          whatToDo: "1. Brief warm check-in.\n2. Movement before homework — always.\n3. No demands for at least 20 minutes after regulation.",
+          sayThis: "'That sounded like a tough day. You made it home. That is enough for now.'",
+          avoidSaying: "'You still have homework to do' — not yet."
+        }
+      },
+      "Transition meltdown": {
+        "Building up": {
+          regulateYourself: "Give the warning before you need compliance — not at the moment of switch.",
+          whatToDo: "1. Five minute warning.\n2. Two minute warning.\n3. Name what is coming next — make it desirable.",
+          sayThis: "'Two minutes left. Then we switch. After this we are doing something you like.'",
+          avoidSaying: "'I have told you three times already' — escalates instead of bridges."
+        },
+        "Full explosion now": {
+          regulateYourself: "The transition is done. Do not keep pushing through it.",
+          whatToDo: "1. Step back.\n2. Reduce all stimulation.\n3. Follow meltdown protocol.",
+          sayThis: "'That was a hard switch. I can see that. I am right here.'",
+          avoidSaying: "'You knew this was coming' — accurate but unhelpful right now."
+        },
+        "It is over": {
+          regulateYourself: "Reconnect before the next demand.",
+          whatToDo: "1. Brief warm reconnection.\n2. Next time build in the 5-2-1 warning sequence before it starts.",
+          sayThis: "'That was a big switch. You got through it.'",
+          avoidSaying: "Nothing about next time yet — wait until fully calm."
+        }
+      },
+      "Need to reconnect": {
+        "Building up": {
+          regulateYourself: "Make sure you are regulated before you approach him.",
+          whatToDo: "1. Wait 20-30 minutes after the hard moment.\n2. Go to him with no agenda.\n3. Lead with warmth not words.",
+          sayThis: "'Hey. I am sorry that got big. Can I sit with you?'",
+          avoidSaying: "'We need to talk about what happened' — too soon."
+        },
+        "Full explosion now": {
+          regulateYourself: "If he is still activated, you are not in reconnection yet. You are still in meltdown protocol.",
+          whatToDo: "1. Return to meltdown in progress — full explosion.\n2. Reconnection comes after full regulation only.",
+          sayThis: "'I am right here. No rush.'",
+          avoidSaying: "Anything that requires processing — not yet."
+        },
+        "It is over": {
+          regulateYourself: "Breathe. Repair is more powerful than a perfect response.",
+          whatToDo: "1. Keep it brief and warm.\n2. No lecture, no replay, no consequences right now.\n3. Physical connection if welcomed.",
+          sayThis: "'Hey. That was hard for both of us. I love you. We are okay.'",
+          avoidSaying: "'I hope you feel bad about what you did' — shame after a meltdown breaks attachment."
+        }
+      }
+    };
+
+    // ── STATE ───────────────────────────────────────────────────────────────
+    let screen = 'situations';
+    let selectedSituation = null;
+    let selectedIntensity = null;
+    let isLoading = false;
+    let customScript = null;
+    let errorMsg = null;
+    let emailSubmitted = false;
+
+    // ── RENDER ──────────────────────────────────────────────────────────────
+    function render() {
+      const app = document.getElementById('app');
+      app.className = 'fade-in';
+      void app.offsetWidth; // restart animation
+
+      if (screen === 'situations') {
+        app.innerHTML = `
+          <div class="fade-in">
+            <h1>What is happening right now?</h1>
+          </div>
+          <div class="grid fade-in">
+            ${Object.keys(SCRIPTS).map(s => `
+              <button class="btn" onclick="selectSituation('${s}')">${s}</button>
+            `).join('')}
+            <button class="btn btn-full" onclick="selectSituation('Something else')">Something else...</button>
+          </div>
+        `;
+      }
+
+      else if (screen === 'intensity') {
+        app.innerHTML = `
+          <div class="fade-in">
+            <p class="situation-label">${selectedSituation}</p>
+            <h2 style="margin-top:8px">How intense is it?</h2>
+          </div>
+          <div class="intensity-stack fade-in">
+            <button class="btn-intensity" onclick="selectIntensity('Building up')">Building up</button>
+            <button class="btn-intensity" onclick="selectIntensity('Full explosion now')">Full explosion now</button>
+            <button class="btn-intensity" onclick="selectIntensity('It is over')">It is over</button>
+          </div>
+          <button class="btn-back" onclick="reset()">← Back</button>
+        `;
+      }
+
+      else if (screen === 'script') {
+        const script = SCRIPTS[selectedSituation][selectedIntensity];
+        const steps = script.whatToDo.split('\n').filter(Boolean);
+        app.innerHTML = `
+          <div class="fade-in" style="text-align:center">
+            <p class="situation-label">${selectedSituation}</p>
+            <p style="color:var(--muted);font-size:0.875rem;margin-top:4px">${selectedIntensity}</p>
+          </div>
+          <div class="script-card fade-in">
+            <div class="script-section">
+              <h3>Regulate Yourself</h3>
+              <p>${script.regulateYourself}</p>
+            </div>
+            <div class="divider"></div>
+            <div class="script-section">
+              <h3>What To Do</h3>
+              ${steps.map(step => `<p class="step">${step}</p>`).join('')}
+            </div>
+            <div class="divider"></div>
+            <div class="script-section say-this">
+              <h3>Say This</h3>
+              <p>${script.sayThis}</p>
+            </div>
+            <div class="divider"></div>
+            <div class="script-section avoid">
+              <h3>Avoid Saying</h3>
+              <p>${script.avoidSaying}</p>
+            </div>
+          </div>
+          ${renderEmailCapture()}
+          <button class="btn-primary" onclick="reset()" style="margin-top:8px">New situation</button>
+        `;
+      }
+
+      else if (screen === 'custom') {
+        if (isLoading) {
+          app.innerHTML = `
+            <div class="fade-in" style="text-align:center">
+              <h2>Finding the right words...</h2>
+              <p class="loading-text" style="margin-top:16px">Hang on. This takes about 10 seconds.</p>
+            </div>
+          `;
+        } else if (customScript) {
+          const steps = customScript.whatToDo.split('\n').filter(Boolean);
+          app.innerHTML = `
+            <div class="script-card fade-in">
+              <div class="script-section">
+                <h3>Regulate Yourself</h3>
+                <p>${customScript.regulateYourself}</p>
+              </div>
+              <div class="divider"></div>
+              <div class="script-section">
+                <h3>What To Do</h3>
+                ${steps.map(step => `<p class="step">${step}</p>`).join('')}
+              </div>
+              <div class="divider"></div>
+              <div class="script-section say-this">
+                <h3>Say This</h3>
+                <p>${customScript.sayThis}</p>
+              </div>
+              <div class="divider"></div>
+              <div class="script-section avoid">
+                <h3>Avoid Saying</h3>
+                <p>${customScript.avoidSaying}</p>
+              </div>
+            </div>
+            ${renderEmailCapture()}
+            <button class="btn-primary" onclick="reset()" style="margin-top:8px">New situation</button>
+          `;
+        } else {
+          app.innerHTML = `
+            <div class="fade-in" style="text-align:center">
+              <h2>Describe what is happening</h2>
+              <p class="situation-label" style="margin-top:8px">We'll create a script for this moment.</p>
+            </div>
+            <div class="fade-in" style="display:flex;flex-direction:column;gap:16px">
+              <textarea id="customText" placeholder="e.g. They won't put their shoes on and we are late for the doctor..."></textarea>
+              ${errorMsg ? `<div class="error-box">${errorMsg}</div>` : ''}
+              <button class="btn-primary" onclick="submitCustom()">Get my script</button>
+              <button class="btn-back" onclick="reset()">Cancel</button>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function renderEmailCapture() {
+      if (emailSubmitted) {
+        return `<div class="email-section"><p class="email-thanks">You're on the list. We'll be in touch.</p></div>`;
+      }
+      return `
+        <div class="email-section">
+          <p>Get notified when new situations are added</p>
+          <div class="email-row">
+            <input class="email-input" type="email" id="emailInput" placeholder="your@email.com" />
+            <button class="btn-email" onclick="submitEmail()">Notify me</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── ACTIONS ─────────────────────────────────────────────────────────────
+    function selectSituation(s) {
+      if (s === 'Something else') {
+        screen = 'custom';
+        customScript = null;
+        errorMsg = null;
+      } else {
+        selectedSituation = s;
+        screen = 'intensity';
+      }
+      render();
+    }
+
+    function selectIntensity(i) {
+      selectedIntensity = i;
+      screen = 'script';
+      render();
+    }
+
+    function reset() {
+      screen = 'situations';
+      selectedSituation = null;
+      selectedIntensity = null;
+      customScript = null;
+      errorMsg = null;
+      isLoading = false;
+      render();
+    }
+
+    async function submitCustom() {
+      const text = document.getElementById('customText')?.value?.trim();
+      if (!text) return;
+      isLoading = true;
+      errorMsg = null;
+      render();
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/generate-script`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ situation: text })
+        });
+        if (!res.ok) throw new Error('Server error');
+        const data = await res.json();
+        customScript = data;
+      } catch (e) {
+        errorMsg = 'Something went wrong. Please try again.';
+        isLoading = false;
+        render();
+        return;
+      }
+      isLoading = false;
+      render();
+    }
+
+    function submitEmail() {
+      const email = document.getElementById('emailInput')?.value?.trim();
+      if (!email || !email.includes('@')) return;
+      // Store locally for now; replace with Kit API call later
+      console.log('Email captured:', email);
+      emailSubmitted = true;
+      render();
+    }
+
+    // ── INIT ────────────────────────────────────────────────────────────────
+    render();
+  </script>
+</body>
+</html>
