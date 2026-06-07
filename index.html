@@ -716,13 +716,28 @@
       render();
     }
 
-    function submitEmail() {
+ async function submitEmail() {
       const email = document.getElementById('emailInput')?.value?.trim();
       if (!email || !email.includes('@')) return;
-      // Store locally for now; replace with Kit API call later
-      console.log('Email captured:', email);
+
+      const btn = document.querySelector('.btn-email');
+      if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+
+      try {
+        const res = await fetch('https://steady-api-t7ww.onrender.com/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, situation: selectedSituation || 'unknown' })
+        });
+        if (!res.ok) throw new Error('Subscribe failed');
+      } catch (err) {
+        console.error('Subscribe error:', err);
+        // Fail silently — don't block the user experience
+      }
+
       emailSubmitted = true;
       render();
+    }
     }
 
     // ── INIT ────────────────────────────────────────────────────────────────
