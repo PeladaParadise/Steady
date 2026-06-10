@@ -516,6 +516,32 @@
       }
     };
 
+    // ── PAYWALL ─────────────────────────────────────────────────────────────
+    const FREE_USES = 3;
+
+    function getUseCount() {
+      return parseInt(localStorage.getItem('steadyUseCount') || '0', 10);
+    }
+
+    function incrementUseCount() {
+      const count = getUseCount() + 1;
+      localStorage.setItem('steadyUseCount', count);
+      return count;
+    }
+
+    function isPaid() {
+      return localStorage.getItem('steadyPaid') === 'true';
+    }
+
+    function checkSuccessParam() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('success') === 'true') {
+        localStorage.setItem('steadyPaid', 'true');
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    }
+
+    checkSuccessParam();
     // ── STATE ───────────────────────────────────────────────────────────────
     let screen = 'situations';
     let selectedSituation = null;
@@ -674,12 +700,85 @@
       render();
     }
 
-    function selectIntensity(i) {
+   function selectIntensity(i) {
+      if (!isPaid() && getUseCount() >= FREE_USES) {
+        renderPaywall();
+        return;
+      }
+      incrementUseCount();
       selectedIntensity = i;
       screen = 'script';
       render();
     }
 
+   // ── PAYWALL SCREEN ───────────────────────────────────────────────────────
+    function renderPaywall() {
+      const app = document.getElementById('app');
+      app.innerHTML = `
+        <div class="fade-in" style="text-align:center;max-width:340px;margin:0 auto">
+          <div style="font-size:2.5rem;margin-bottom:16px">🧠</div>
+          <h2 style="margin-bottom:12px">You've used your 3 free scripts</h2>
+          <p style="color:var(--muted);font-size:0.95rem;line-height:1.6;margin-bottom:28px">
+            Steady is CA$9/month. Cancel any time.<br>
+            Unlimited scripts, every situation.
+          </p>
+          <button class="btn btn-full" onclick="startCheckout()" style="font-size:1.05rem;padding:16px">
+            Get full access — CA$9/month
+          </button>
+          <p style="color:var(--muted);font-size:0.78rem;margin-top:14px">
+            Secure payment via Stripe. No account required.
+          </p>
+          <div style="margin-top:28px;border-top:1px solid rgba(255,255,255,0.08);padding-top:20px">
+            <p style="color:var(--muted);font-size:0.8rem;margin-bottom:10px">Have a beta access code?</p>
+            <div style="display:flex;gap:8px;justify-content:center">
+              <input id="betaCode" type="text" placeholder="Enter code" style="background:var(--card);border:1px solid rgba(255,255,255,0.12);color:var(--fg);padding:8px 12px;border-radius:8px;font-size:0.85rem;width:140px;text-transform:uppercase" />
+              <button onclick="redeemCode()" style="background:var(--primary);color:#1B4D3E;border:none;padding:8px 14px;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer">Apply</button>
+            </div>
+            <p id="codeMsg" style="font-size:0.78rem;margin-top:8px;min-height:1em"></p>
+          </div>
+        </div>
+      `;
+    }
+
+    function redeemCode() {
+      const input = document.getElementById('betaCode');
+      const msg = document.getElementById('codeMsg');
+      const code = input?.value?.trim().toUpperCase();
+      if (code === 'STEADYBETA') {
+        localStorage.setItem('steadyPaid', 'true');
+        if (msg) msg.style.color = 'var(--primary)';
+        if (msg) msg.textContent = 'Code accepted. Welcome!';
+        setTimeout(() => {
+          selectedIntensity = null;
+          screen = 'situations';
+          render();
+        }, 800);
+      } else {
+        if (msg) msg.style.color = '#e05c5c';
+        if (msg) msg.textContent = 'Code not recognized.';
+      }
+    }
+
+    async function startCheckout() {
+      const btn = document.querySelector('.btn-full');
+      if (btn) { btn.disabled = true; btn.textContent = 'Loading...'; }
+      try {
+        const res = await fetch('https://steady-api-t7ww.onrender.com/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert('Something went wrong. Please try again.');
+          if (btn) { btn.disabled = false; btn.textContent = 'Get full access — CA$9/month'; }
+        }
+      } catch (err) {
+        alert('Something went wrong. Please try again.');
+        if (btn) { btn.disabled = false; btn.textContent = 'Get full access — CA$9/month'; }
+      }
+    }
     function reset() {
       screen = 'situations';
       selectedSituation = null;
