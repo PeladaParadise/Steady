@@ -744,20 +744,46 @@
       const input = document.getElementById('betaCode');
       const msg = document.getElementById('codeMsg');
       const code = input?.value?.trim().toUpperCase();
-      if (code === 'STEADYBETA') {
-        localStorage.setItem('steadyPaid', 'true');
-        if (msg) msg.style.color = 'var(--primary)';
-        if (msg) msg.textContent = 'Code accepted. Welcome!';
-        setTimeout(() => {
-          selectedIntensity = null;
-          screen = 'situations';
-          render();
-        }, 800);
-      } else {
-        if (msg) msg.style.color = '#e05c5c';
-        if (msg) msg.textContent = 'Code not recognized.';
-      }
+     function redeemCode() {
+  const input = document.getElementById('betaCode');
+  const msg = document.getElementById('codeMsg');
+  const code = input?.value?.trim().toUpperCase();
+  if (code === 'STEADYBETA') {
+    localStorage.setItem('steadyPaid', 'true');
+    if (msg) msg.style.color = 'var(--primary)';
+    if (msg) msg.textContent = 'Code accepted. Welcome!';
+    setTimeout(() => {
+      selectedIntensity = null;
+      screen = 'situations';
+      render();
+    }, 800);
+  } else if (code === 'STEADYPOD') {
+    if (msg) msg.style.color = 'var(--primary)';
+    if (msg) msg.textContent = 'Code accepted. One moment...';
+    startCheckoutPod();
+  } else {
+    if (msg) msg.style.color = '#e05c5c';
+    if (msg) msg.textContent = 'Code not recognized.';
+  }
+}
+
+async function startCheckoutPod() {
+  try {
+    const res = await fetch(
+      'https://steady-api-t7ww.onrender.com/create-checkout-session-pod', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert('Something went wrong. Please try again.');
     }
+  } catch (err) {
+    alert('Something went wrong. Please try again.');
+  }
+}
 
     async function startCheckout() {
       const btn = document.querySelector('.btn-full');
