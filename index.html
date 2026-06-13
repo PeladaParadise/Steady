@@ -343,8 +343,9 @@
 </head>
 <body>
   <main id="app"></main>
-  <footer>
+<footer>
     <p>Steady — The Steady Home Method</p>
+    <p id="manageLink" style="display:none"><a href="https://billing.stripe.com/p/login/eVq9AU1hF5MHdy24WW0RG00" style="color:rgba(93,202,165,0.4);font-size:0.75rem">Manage subscription</a></p>
   </footer>
 
   <script>
@@ -542,6 +543,7 @@
     }
 
     checkSuccessParam();
+    if (isPaid()) document.getElementById('manageLink').style.display = 'block';
     // ── STATE ───────────────────────────────────────────────────────────────
     let screen = 'situations';
     let selectedSituation = null;
